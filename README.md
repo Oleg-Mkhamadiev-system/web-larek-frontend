@@ -40,3 +40,35 @@ npm run build
 ```
 yarn build
 ```
+
+## Документация
+
+/* 
+  * интерфейс получения данных с сервера
+  **/
+export interface IApiProductList {
+    items: IProductItem[];
+}
+
+/*
+* Интерфейс, описывающий данные товара
+**/
+export interface IProductItem {
+    // айди товара
+    id: string;
+
+    // описание товара
+    description: string;
+
+    // изображение товара
+    image: string;
+
+    // название товара
+    title: string;
+
+    // категория товара
+    category: CategoryItem;
+
+    // цена товара
+    price: number;
+}
