@@ -57,3 +57,14 @@ export type IOrder = {
     // массив купленных товаров
     items: string[];
 }
+
+// интерфейс описания формы заказа товара
+export interface IOrderForm {
+    payment: string;
+    address: string;
+    email: string;
+    phone: string;
+}
+
+// тип описания ошибок валидации форм
+export type FormErrors = Partial<Record<keyof IOrderForm, string>>;
