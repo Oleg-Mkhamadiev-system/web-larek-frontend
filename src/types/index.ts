@@ -1,4 +1,4 @@
-
+import { Product } from "../components/AppData";
 /* 
   * интерфейс получения данных с сервера
   **/
@@ -52,7 +52,7 @@ export type IOrder = {
     address: string;
 
     // цена
-    total: number;
+    total: number | null;
 
     // массив купленных товаров
     items: string[];
@@ -68,3 +68,33 @@ export interface IOrderForm {
 
 // тип описания ошибок валидации форм
 export type FormErrors = Partial<Record<keyof IOrderForm, string>>;
+
+// тип описания состояния приложения
+export interface IAppState {
+    // массив карточек товаров
+    catalog: Product[];
+    // корзина с выбранными товарами
+    basket: Product[];
+    // сведения о заказе
+    order: IOrder;
+    // ошибки валидации форм
+    formErrors: FormErrors;
+    // метод добавления товара к корзину
+    addProductBasket(value: Product): void;
+    // метод удаления товара из корзины
+    removeProductBasket(id: string): void;
+    // метод получения количества товаров в корзине
+    getProductBasketAmount(): number;
+    // метод получения общей стоимости товаров
+    getTotalProductBasket(): number
+    // метод очистки корзины
+    clearBasket(): void;
+    // метод получения данных с сервера
+    setCatalog(items: IProductItem[]): void;
+    // метод заполнения полей форм
+    setValueField(field: keyof IOrderForm, value: string): void;
+    // метод валидации формы для модального окна коммуникации
+    validateContacts(): boolean;
+    // метод валидации формы для модального окна оформления заказа
+    validateOrder(): boolean;
+}
