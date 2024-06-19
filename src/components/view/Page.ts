@@ -1,4 +1,4 @@
-import { Component } from "./base/Component";
+import { Component } from "../base/Component";
 
 // тип описания страницы
 interface IPage {

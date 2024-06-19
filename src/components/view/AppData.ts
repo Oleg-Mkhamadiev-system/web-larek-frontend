@@ -1,5 +1,5 @@
-import { FormErrors, IAppState, IOrder, IProductItem } from "../types";
-import { Model } from "./base/Model";
+import { FormErrors, IAppState, IOrder, IProductItem } from "../../types";
+import { Model } from "../base/Model";
 
 // Класс создания объекта данных на основе модели
 export class Product extends Model<IProductItem> {

@@ -1,4 +1,4 @@
-import { Component } from "./base/Component";
+import { Component } from "../base/Component";
 
 // описание интерфейса модального окна карточки товара
 interface ICard {

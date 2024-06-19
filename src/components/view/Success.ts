@@ -1,4 +1,4 @@
-import { Component } from "./base/Component";
+import { Component } from "../base/Component";
 
 // интерфейс описания модального окна успешного заказа
 interface ISuccess {

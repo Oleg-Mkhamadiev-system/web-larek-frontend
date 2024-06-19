@@ -1,4 +1,4 @@
-import { Form } from "./common/Form";
+import { Form } from "../common/Form";
 
 // интерфейс описания модального окна оформления товара
 interface IOrder {
