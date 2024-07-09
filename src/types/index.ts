@@ -1,4 +1,4 @@
-import { Product } from "../components/AppData";
+import { Product } from "../components/view/AppData";
 /* 
   * интерфейс получения данных с сервера
   **/
@@ -34,7 +34,7 @@ export type CategoryItem = 'другое'|'софт-скил'|'дополнит�
 
 // типизирую объект категорий товара
 export type CategoryMap = {
-    [key in CategoryItem]
+    [key in CategoryItem]: string;
 }
 
 // интерфейс описания заказа
