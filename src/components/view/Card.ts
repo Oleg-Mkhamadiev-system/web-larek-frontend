@@ -30,11 +30,12 @@ export class Card extends Component<ICard> {
         actions?: ICardActions) {
             // вызываю абстрактный класс Компонент
         super(container);
-        this._title = ensureElement<HTMLElement>('.card__title');
-        this._image = ensureElement<HTMLImageElement>('.card__image');
-        this._category = ensureElement<HTMLElement>('.card__category');
-        this._price = ensureElement<HTMLElement>('.card__price');
-        this._button = ensureElement<HTMLButtonElement>('.card__button');
+
+        this._title = ensureElement<HTMLElement>('.card__title', container);
+        this._image = ensureElement<HTMLImageElement>('.card__image', container);
+        this._category = ensureElement<HTMLElement>('.card__category', container);
+        this._price = ensureElement<HTMLElement>('.card__price', container);
+        this._button = ensureElement<HTMLButtonElement>('.card__button'), container;
 
         if(actions?.onClick) {
             this._button.addEventListener('click', actions.onClick);
@@ -70,5 +71,18 @@ export class Card extends Component<ICard> {
         if(!this._button.disabled) {
             this._button.disabled = value;
         }
+    }
+}
+
+export class CardPreview extends Card {
+    protected _description: HTMLElement;
+
+    constructor(container: HTMLElement, actions?: ICardActions) {
+        super(container, actions);
+        this._description = ensureElement<HTMLElement>('.card__text', container);
+    }
+
+    set description (value: string) {
+        this._description.textContent = value;
     }
 }
