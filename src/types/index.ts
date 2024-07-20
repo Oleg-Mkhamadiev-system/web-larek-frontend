@@ -26,7 +26,7 @@ export interface IProductItem {
     category: CategoryItem;
 
     // цена товара
-    price: number;
+    price: number | null;
 }
 
 // тип категорий товара
