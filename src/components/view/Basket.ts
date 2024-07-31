@@ -20,14 +20,14 @@ export class Basket extends Component<IBasket> {
     constructor(container: HTMLElement, protected events: IEvents) {
         super(container);
         
-        this._list = ensureElement<HTMLElement>(`.basket__list`);
-        this._price = ensureElement<HTMLElement>(`.card__price`);
-        this._button = ensureElement<HTMLButtonElement>(`.card__button`);
+        this._list = container.querySelector(`.basket__list`) as HTMLElement;
+        this._price = container.querySelector(`.basket__price`) as HTMLElement;
+        this._button = container.querySelector(`.basket__button`) as HTMLButtonElement;
 
         // логика кнопки оформления ведет на модалку заказа
         if (this._button) {
             this._button.addEventListener('click', () => {
-                this.events.emit('basket: order');
+                this.events.emit('basket:order');
             })
         }
     }
@@ -60,7 +60,7 @@ export class BasketItem extends Component<IProductBasket> {
     protected _index: HTMLElement;
     protected _title: HTMLElement;
     protected _price: HTMLElement;
-    protected _buttonDelete: HTMLElement;
+    protected _buttonDelete: HTMLButtonElement;
 
     constructor(container: HTMLElement, _actions?: BasketActions) {
         super(container);

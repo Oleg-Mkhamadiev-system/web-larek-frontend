@@ -20,25 +20,33 @@ interface ICardActions {
 
 // Класс создания модального окна карточки товара
 export class Card extends Component<ICard> {
+    //protected _card: HTMLElement;
     protected _image: HTMLImageElement;
     protected _title: HTMLElement;
     protected _category: HTMLElement;
     protected _price: HTMLElement;
     protected _button: HTMLButtonElement;
+
     constructor(
+        //template: HTMLTemplateElement,
         container: HTMLElement,
         actions?: ICardActions) {
             // вызываю абстрактный класс Компонент
         super(container);
 
-        this._title = ensureElement<HTMLElement>('.card__title', container);
-        this._image = ensureElement<HTMLImageElement>('.card__image', container);
-        this._category = ensureElement<HTMLElement>('.card__category', container);
-        this._price = ensureElement<HTMLElement>('.card__price', container);
-        this._button = ensureElement<HTMLButtonElement>('.card__button'), container;
+        //this._card = container.querySelector('.card') as HTMLElement;
+        this._title = container.querySelector('.card__title') as HTMLElement;
+        this._image = container.querySelector('.card__image') as HTMLImageElement;
+        this._category = container.querySelector('.card__category') as HTMLElement;
+        this._price = container.querySelector('.card__price') as HTMLElement;
+        this._button = container.querySelector('.gallery__item') as HTMLButtonElement;
 
         if(actions?.onClick) {
-            this._button.addEventListener('click', actions.onClick);
+            if (this._button) {
+                this._button.addEventListener('click', actions.onClick);
+            } else {
+                container.addEventListener('click', actions.onClick)
+            }
         };
     };
 

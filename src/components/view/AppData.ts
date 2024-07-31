@@ -55,7 +55,7 @@ export class AppState extends Model<IAppState> {
         this.basket.length = 0;
     }
 
-    setCatalog() {
+    setItems() {
         this.order.items = this.basket.map(item => item.id);
     }
 
@@ -113,5 +113,14 @@ export class AppState extends Model<IAppState> {
         this.formErrors = errors;
         this.events.emit('orderFormErrors:change', this.formErrors);
         return Object.keys(errors).length === 0;
+    }
+
+    setCatalog(items: IProductItem[]) {
+      this.catalog = items.map(item => new Product({ ...item, selected: false }, this.events));
+      this.emitChanges('items:changed', { catalog: this.catalog });
+    }
+
+    resetSelected() {
+      this.catalog.forEach(item => item.selected = false);
     }
 }

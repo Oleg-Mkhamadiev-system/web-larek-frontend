@@ -36,5 +36,11 @@ export class Order extends Form<IOrder> {
                 this.onInputChange('payment', 'cash');
             })
         };
-    }
+    };
+
+    // Метод дезактивации кнопок
+    disableButtons () {
+        this._card.classList.remove('button_alt-active');
+        this._cash.classList.remove('button_alt-active');
+    };
 }

@@ -18,11 +18,13 @@ export class Success extends Component<ISuccess> {
     constructor(container: HTMLElement, actions?: ISuccessAction) {
         super(container);
 
-        this._description = ensureElement<HTMLElement>('film__description');
-        this._button = ensureElement<HTMLButtonElement>('.modal__close');
+        this._description = container.querySelector('.order-success__description') as HTMLElement;
+        this._button = container.querySelector('.order-success') as HTMLButtonElement;
 
         if (actions?.onClick) {
-            this._button.addEventListener('click', () => actions.onClick);
+            if (this._button) {
+                this._button.addEventListener('click', () => actions.onClick);
+            }
         }
     }
 

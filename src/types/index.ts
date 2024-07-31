@@ -6,6 +6,14 @@ export interface IApiProductList {
     items: IProductItem[];
 }
 
+// тип категорий товара
+export type CategoryItem = 'другое' | 'софт-скил' | 'дополнительное' | 'кнопка' | 'хард-скил';
+
+// типизирую объект категорий товара
+export type CategoryMap = {
+    [key in CategoryItem]: string;
+};
+
 /*
 * Интерфейс, описывающий данные товара
 **/
@@ -27,15 +35,10 @@ export interface IProductItem {
 
     // цена товара
     price: number | null;
-}
 
-// тип категорий товара
-export type CategoryItem = 'другое'|'софт-скил'|'дополнительное'|'кнопка'|'хард-скил';
-
-// типизирую объект категорий товара
-export type CategoryMap = {
-    [key in CategoryItem]: string;
-}
+    // добавлен ли товар в корзину или нет
+    selected: boolean;
+};
 
 // интерфейс описания заказа
 export type IOrder = {
