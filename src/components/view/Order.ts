@@ -1,4 +1,4 @@
-import { ensureElement } from "../../utils/utils";
+
 import { IEvents } from "../base/events";
 import { Form } from "../common/Form";
 
@@ -12,13 +12,16 @@ interface IOrder {
 export class Order extends Form<IOrder> {
     protected _card: HTMLButtonElement;
     protected _cash: HTMLButtonElement;
-
-    constructor(container: HTMLFormElement, protected events: IEvents) {
+    
+    constructor(
+        protected blockName: string,
+        container: HTMLFormElement,
+        protected events: IEvents) {
         super(container, events);
         
         this._card = container.elements.namedItem('card') as HTMLButtonElement;
         this._cash = container.elements.namedItem('cash') as HTMLButtonElement;
-
+    
         // выделение поля - онлайн
         if (this._card) {
             this._card.addEventListener('click', () => {
@@ -38,7 +41,12 @@ export class Order extends Form<IOrder> {
         };
     };
 
-    // Метод дезактивации кнопок
+    // сеттер для адреса
+    set address(value: string) {
+		(this.container.elements.namedItem('address') as HTMLInputElement).value = value;
+	}
+
+    // Метод деактивации кнопок
     disableButtons () {
         this._card.classList.remove('button_alt-active');
         this._cash.classList.remove('button_alt-active');

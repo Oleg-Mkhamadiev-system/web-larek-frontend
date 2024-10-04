@@ -13,10 +13,11 @@ export class Product extends Model<IProductItem> {
 }
 
 export class AppState extends Model<IAppState> {
-    // массив со всеми товарами
-    catalog: Product[];
     // корзина с товарами
     basket: Product[] = [];
+    // массив со всеми товарами
+    catalog: Product[];
+    
     // объект заказа товаров клиентом
     order: IOrder = {
         payment: '',
@@ -29,8 +30,8 @@ export class AppState extends Model<IAppState> {
     // объект валидации форм
     formErrors: FormErrors = {};
 
-    addProductBasket(value: Product) {
-        this.basket.push(value);
+    addProductBasket(item: Product) {
+        this.basket.push(item);
     }
 
     removeProductBasket(id: string) {
@@ -43,11 +44,6 @@ export class AppState extends Model<IAppState> {
 
     // сумма всех товаров в корзине
     getTotalProductBasket() {
-        //let sum = 0;
-        //this.basket.forEach(item => {
-          //  sum = sum + item.price;
-        //})
-        //return sum;
         return this.basket.reduce((sum, item) => sum + item.price, 0);
     }
 
@@ -71,17 +67,31 @@ export class AppState extends Model<IAppState> {
         }
     }
 
-    setValueField(field: keyof IOrderForm, value: string) {
+    setOrderAddressInput(field: keyof IOrderForm, value: string) {
         this.order[field] = value;
 
-        if (this.validateContacts()) {
-            this.events.emit('contacts:ready', this.order);
+        if (field === 'address') {
+          this.order.address = value;
         }
 
         if (this.validateOrder()) {
           this.events.emit('order:ready', this.order);
         }
     }
+
+    setOrderContactsInput(field: keyof IOrderForm, value: string) {
+      this.order[field] = value;
+
+      if (field === 'email') {
+        this.order.email = value;
+      } else if (field === 'phone') {
+        this.order.phone = value;
+      }
+
+      if (this.validateContacts()) {
+        this.events.emit('contacts:ready', this.order);
+      }
+  }
 
     validateContacts() {
         const errors: typeof this.formErrors = {};

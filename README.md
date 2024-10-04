@@ -43,13 +43,6 @@ yarn build
 
 ## Документация
 
-/* 
-  * интерфейс получения данных с сервера
-  **/
-export interface IApiProductList {
-    items: IProductItem[];
-}
-
 /*
  * Интерфейс, описывающий данные товара
   **/
@@ -71,18 +64,6 @@ export interface IProductItem {
 
     // цена товара
     price: number;
-}
-
-/*
- * тип категорий товара
-  **/
-export type CategoryItem = 'другое'|'софт-скил'|'дополнительное'|'кнопка'|'хард-скил';
-
-/* 
- * типизирую объект категорий товара
- **/
-export type CategoryMap = {
-    [key in CategoryItem]
 }
 
 /*

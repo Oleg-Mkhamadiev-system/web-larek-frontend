@@ -1,18 +1,4 @@
 import { Product } from "../components/view/AppData";
-/* 
-  * интерфейс получения данных с сервера
-  **/
-export interface IApiProductList {
-    items: IProductItem[];
-}
-
-// тип категорий товара
-export type CategoryItem = 'другое' | 'софт-скил' | 'дополнительное' | 'кнопка' | 'хард-скил';
-
-// типизирую объект категорий товара
-export type CategoryMap = {
-    [key in CategoryItem]: string;
-};
 
 /*
 * Интерфейс, описывающий данные товара
@@ -31,7 +17,7 @@ export interface IProductItem {
     title: string;
 
     // категория товара
-    category: CategoryItem;
+    category: string;
 
     // цена товара
     price: number | null;

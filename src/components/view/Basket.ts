@@ -4,78 +4,110 @@ import { Component } from "../base/Component";
 import { IEvents } from "../base/events";
 
 // интерфейс описания модального окна корзины
-interface IBasket {
-    // массив карточек в корзине
-    list: HTMLElement[];
-    // общая стоимость товаров
+export interface IBasket {
+    basket: HTMLElement;
+    items: HTMLElement[];
+    index: number;
+    title: string;
     price: number;
-}
-
-// Класс создания корзины
-export class Basket extends Component<IBasket> {
-    protected _list: HTMLElement;
-    protected _price: HTMLElement;
-    protected _button: HTMLButtonElement;
-    
-    constructor(container: HTMLElement, protected events: IEvents) {
-        super(container);
-        
-        this._list = container.querySelector(`.basket__list`) as HTMLElement;
-        this._price = container.querySelector(`.basket__price`) as HTMLElement;
-        this._button = container.querySelector(`.basket__button`) as HTMLButtonElement;
-
-        // логика кнопки оформления ведет на модалку заказа
-        if (this._button) {
-            this._button.addEventListener('click', () => {
-                this.events.emit('basket:order');
-            })
-        }
-    }
-
-    // метод добавления списка товаров
-    set list(items: HTMLElement[]) {
-        this._list.replaceChildren(...items);
-        // состояние кнопки
-        this._button.disabled = items.length ? false : true;
-    }
-
-    set price(value: number | null) {
-        if (value === null) {
-            this._price.textContent = 'Бесценно';
-        }
-        this._price.textContent = value + 'синапсов';  
-    }
-}
-
-export interface IProductBasket extends IProductItem {
-    id: string;
-    index: number
+    button: HTMLElement;
 }
 
 interface BasketActions {
     onClick: (event: MouseEvent) => void;
 }
 
-export class BasketItem extends Component<IProductBasket> {
-    protected _index: HTMLElement;
+// Класс создания корзины
+export class Basket extends Component<IBasket> {
+    protected _basket: HTMLElement;
     protected _title: HTMLElement;
+    protected _list: HTMLElement;
     protected _price: HTMLElement;
-    protected _buttonDelete: HTMLButtonElement;
+    protected _button: HTMLButtonElement;
+    protected _headerBasketCounter: HTMLElement;
+    protected _headerBasketButton: HTMLButtonElement;
+    
+    constructor(
+        container: HTMLElement,
+        protected events: IEvents
+    ) {
 
-    constructor(container: HTMLElement, _actions?: BasketActions) {
         super(container);
+        
+        this._basket = container.querySelector('.basket');
+        this._title = container.querySelector('.modal__title');
+        this._list = container.querySelector('.basket__list');
+        this._button = container.querySelector('.basket__button');
+        this._price = container.querySelector('.basket__price');
+        this._headerBasketCounter = document.querySelector('.header__basket-counter');
+        this._headerBasketButton = document.querySelector('.header__basket');
 
-        this._index = ensureElement<HTMLElement>(`.basket__item-index`);
-        this._title = ensureElement<HTMLElement>(`.card__title`);
-        this._price = ensureElement<HTMLElement>(`.card__price`);
-        this._buttonDelete = ensureElement<HTMLButtonElement>(`.basket__item-delete`);
 
-        if (_actions?.onClick) {
-            this._buttonDelete.addEventListener('click', _actions.onClick)
+        // логика кнопки оформления ведет на модалку заказа
+        if (this._button) {
+            this._button.addEventListener('click', () => {
+                this.events.emit('basket:order')
+            })
         }
+
+        this._headerBasketButton.addEventListener('click', () => { this.events.emit('basket:open') });
+
+        this.items = [];
     }
 
-    set index(value: string) {
+    // метод добавления списка товаров
+    set items(items: HTMLElement[]) {
+        this._list.replaceChildren(...items);
+        // состояние кнопки
+        this._button.disabled = items.length ? false : true;
+    }
+
+    set price(price: number) {
+        this._price.textContent = price + ' синапсов';
+    }
+
+    renderHeaderBasketCounter(value: number) {
+        this._headerBasketCounter.textContent = String(value);
+      }
+}
+
+export interface IProductBasket extends IProductItem {
+    id: string;
+    basketItem: HTMLElement;
+    index: number;
+    title: string;
+    buttonDelete: HTMLButtonElement;
+    price: number
+}
+
+export class BasketItem extends Component<IProductBasket> {
+    protected _basketItem: HTMLElement;
+    protected _index: HTMLElement;
+    protected _buttonDelete: HTMLButtonElement;
+    protected _title: HTMLElement;
+    protected _price: HTMLElement
+
+    constructor(
+        container: HTMLElement,
+        actions?: BasketActions) {
+
+        super(container);
+
+        this._basketItem = container.querySelector('.basket__item');
+        this._index = container.querySelector('.basket__item-index');
+        this._title = container.querySelector('.card__title');
+        this._price = container.querySelector('.card__price');
+        this._buttonDelete = container.querySelector('.basket__item-delete');
+
+        if (this._buttonDelete) {
+            this._buttonDelete.addEventListener('click', (evt) => {
+                this.container.remove();
+                actions?.onClick(evt);
+        });
+        };
+    }
+
+    set index(value: number) {
         this._index.textContent = value.toString();
     }
 
@@ -84,6 +116,6 @@ export class BasketItem extends Component<IProductBasket> {
     }
 
     set price(value: string) {
-        this._price.textContent = value + 'синапсов';
+        this._price.textContent = value + ' синапсов';
     }
 }
