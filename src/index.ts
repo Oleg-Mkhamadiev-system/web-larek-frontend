@@ -11,29 +11,18 @@ import { Order } from './components/view/Order';
 import { Contacts } from './components/view/Contacts';
 import { Success } from './components/view/Success';
 import { IOrderForm, IProductItem } from './types';
-import { Card, CardItem, CardPreview } from './components/view/Card';
+import { CardItem, CardPreview } from './components/view/Card';
 
 const api = new Api(API_URL);
 const events = new EventEmitter();
 
-// Чтобы мониторить все события для отладки
-events.onAll(({ eventName, data }) => {
-    console.log(eventName, data);
-})
-
-const successTemplate = document.querySelector('#success') as HTMLTemplateElement;
-const cardTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement;
-const cardPreviewTemplate = document.querySelector('#card-preview') as HTMLTemplateElement;
-const cardBasketTemplate = document.querySelector('#card-basket') as HTMLTemplateElement;
-const basketTemplate = document.querySelector('#basket') as HTMLTemplateElement;
-const orderTemplate = document.querySelector('#order') as HTMLTemplateElement;
-const contactsTemplate = document.querySelector('#contacts') as HTMLTemplateElement;
-const success = new Success(cloneTemplate(successTemplate), {
-    onClick: () => {
-        events.emit('modal:close');
-        modal.close();
-    }
-});
+const successTemplate = ensureElement<HTMLTemplateElement>('#success');
+const cardTemplate = ensureElement<HTMLTemplateElement>('#card-catalog');
+const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview');
+const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
+const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
+const orderTemplate = ensureElement<HTMLTemplateElement>('#order');
+const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts');
 
 // Модель данных приложения
 const appData = new AppState({}, events);
@@ -44,6 +33,7 @@ const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 const basket = new Basket(cloneTemplate(basketTemplate), events);
 const order = new Order('order', cloneTemplate(orderTemplate), events);
 const contacts = new Contacts(cloneTemplate(contactsTemplate), events);
+const success = new Success(cloneTemplate(successTemplate), events);
 
 
 api.get('/product')
@@ -75,7 +65,6 @@ events.on('items:changed', () => {
 
 // открытие карточки
 events.on('card:select', (item: Product) => {
-    page.locked = true;
     const card = new CardPreview(
         cloneTemplate(cardPreviewTemplate),
         { 
@@ -102,11 +91,8 @@ events.on('card:addBasket', (item: Product) => {
     modal.close();
 });
 
-console.log(appData.addProductBasket)
-
 // открытие корзины с блокировкой прокрутки страницы
 events.on('basket:open', () => {
-    page.locked = true;
     const basketItems = appData.basket.map((item, index) => {
         const basketItem = new BasketItem(
             cloneTemplate(cardBasketTemplate),
@@ -209,8 +195,20 @@ events.on('order:success', (res: ApiListResponse<string>) => {
     });
 });
 
+// блокировать прокрутку страницы при открытии модалки
+events.on('modal:open', () => {
+    modal.locked = true;
+  });
+  
+  // разблокировать прокрутку страницы при закрытии модалки
+  events.on('modal:close', () => {
+    modal.locked = false;
+  });
+
+// закрытие модалки при нажатии на кнопку "За новыми покупками"
+events.on('success:close', () => modal.close());
+
 // Закрыть модальное окно
 events.on('modal:close', () => {
-    page.locked = false;
     appData.clearOrder();
 })

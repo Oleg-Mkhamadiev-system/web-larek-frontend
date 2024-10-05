@@ -9,12 +9,14 @@ interface IModalData {
 export class Modal extends Component<IModalData> {
     protected _closeButton: HTMLButtonElement;
     protected _content: HTMLElement;
+    protected _wrapper: HTMLElement;
 
     constructor(container: HTMLElement, protected events: IEvents) {
         super(container);
 
         this._closeButton = ensureElement<HTMLButtonElement>('.modal__close', container);
         this._content = ensureElement<HTMLElement>('.modal__content', container);
+        this._wrapper = document.querySelector('.page__wrapper');
 
         this._closeButton.addEventListener('click', this.close.bind(this));
         this.container.addEventListener('click', this.close.bind(this));
@@ -35,6 +37,15 @@ export class Modal extends Component<IModalData> {
         this.container.classList.remove('modal_active');
         this.content = null;
         this.events.emit('modal:close');
+    }
+
+    // сеттер для блока прокрутки
+    set locked(value: boolean) {
+        if (value) {
+            this._wrapper.classList.add('.page__wrapper_locked');
+        } else {
+            this._wrapper.classList.remove('.page__wrapper_locked');
+        }
     }
 
     render(data: IModalData): HTMLElement {
